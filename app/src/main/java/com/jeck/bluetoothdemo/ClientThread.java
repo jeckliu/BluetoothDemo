@@ -9,8 +9,7 @@ public class ClientThread extends Thread {
     private BluetoothSocket bluetoothSocket;
     private MainActivity mainActivity;
 
-    public ClientThread(MainActivity activity) {
-        BluetoothDevice bluetoothDevice = activity.getBluetoothDevice();
+    public ClientThread(MainActivity activity,BluetoothDevice bluetoothDevice) {
         this.mainActivity = activity;
         try {
             bluetoothSocket = bluetoothDevice

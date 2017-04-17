@@ -14,14 +14,6 @@
         android:text="创建服务端"
         android:textSize="25sp" />
 
-    <TextView
-        android:id="@+id/client"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="创建客户端"
-        android:textSize="25sp" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,8 +43,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="接收数据"
             android:clickable="false"
+            android:text="接收数据"
             android:textSize="25sp" />
 
         <EditText
@@ -62,20 +54,34 @@
             android:textSize="25sp" />
     </LinearLayout>
 
-    <TextView
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:id="@+id/bound_devices"
-        android:textSize="25sp"
-        android:text="绑定的设备："
-        android:layout_marginTop="20dp"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:id="@+id/found_devices"
-        android:textSize="25sp"
-        android:text="找到的设备："
-        android:layout_marginTop="20dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已配对设备:" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_bound"
+            android:layout_width="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="可用设备:" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_found"
+            android:layout_width="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
 </LinearLayout>

@@ -26,7 +26,7 @@ import java.util.UUID;
 
 public class MainActivity extends Activity implements ResultHandler {
     public final static String NAME = "future-agent";
-    public final static UUID AGENT_UUID = UUID.nameUUIDFromBytes(NAME.getBytes());
+    public final static UUID AGENT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     private TextView tvServer;
     private Button btnSend;
@@ -137,13 +137,12 @@ public class MainActivity extends Activity implements ResultHandler {
         return bluetoothAdapter;
     }
 
-    public void manageConnectedSocket(BluetoothSocket bluetoothSocket) {
+    public void manageConnectedSocket(final BluetoothSocket bluetoothSocket) {
         if (bluetoothSocket != null) {
-            Globals.bluetoothSocket = bluetoothSocket;
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    startListenThread();
+                    startListenThread(bluetoothSocket);
                 }
             });
         }
@@ -151,9 +150,8 @@ public class MainActivity extends Activity implements ResultHandler {
 
     private ConnectedThread mConnectedThread;
 
-    private void startListenThread() {
-        final MainActivity mainsActivity = this;
-        mConnectedThread = new ConnectedThread(mainsActivity, mainsActivity);
+    private void startListenThread(BluetoothSocket bluetoothSocket) {
+        mConnectedThread = new ConnectedThread(this, this,bluetoothSocket);
         mConnectedThread.execute();
         Toast.makeText(getApplicationContext(), "ConnectedThread create", Toast.LENGTH_SHORT)
                 .show();

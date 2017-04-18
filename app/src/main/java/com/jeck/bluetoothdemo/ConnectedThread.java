@@ -2,6 +2,7 @@
 package com.jeck.bluetoothdemo;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -13,20 +14,22 @@ public class ConnectedThread extends AsyncTask<Void, Void, Void> {
     private static final int BUFFER_SIZE = 1024;
 
     private ResultHandler resultHandler;
+    private BluetoothSocket bluetoothSocket;
     private InputStream inputStream;
     private OutputStream outputStream;
     private Activity activity;
     private byte[] buffer;
     private boolean repeat;
 
-    public ConnectedThread(ResultHandler resultHandler, Activity activity) {
+    public ConnectedThread(ResultHandler resultHandler, Activity activity, BluetoothSocket bluetoothSocket) {
         this.resultHandler = resultHandler;
         this.activity = activity;
+        this.bluetoothSocket = bluetoothSocket;
         repeat = true;
         buffer = new byte[BUFFER_SIZE];
         try {
-            inputStream = Globals.bluetoothSocket.getInputStream();
-            outputStream = Globals.bluetoothSocket.getOutputStream();
+            inputStream = bluetoothSocket.getInputStream();
+            outputStream = bluetoothSocket.getOutputStream();
         } catch (Exception e) {
             Log.e(ConnectedThread.class.getSimpleName(), e.toString(), e);
         }
@@ -63,7 +66,7 @@ public class ConnectedThread extends AsyncTask<Void, Void, Void> {
 
     public void cancel() {
         try {
-            Globals.bluetoothSocket.close();
+            bluetoothSocket.close();
         } catch (Exception e) {
             Log.e(ConnectedThread.class.getSimpleName(), e.toString(), e);
         }

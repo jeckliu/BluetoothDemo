@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -152,13 +153,13 @@ public class MainActivity extends Activity implements ResultHandler {
 
     private void startListenThread(BluetoothSocket bluetoothSocket) {
         mConnectedThread = new ConnectedThread(this, this,bluetoothSocket);
-        mConnectedThread.execute();
+        mConnectedThread.start();
         Toast.makeText(getApplicationContext(), "ConnectedThread create", Toast.LENGTH_SHORT)
                 .show();
     }
 
     @Override
-    public void handleResult(byte[] parsedData, Activity activity) {
+    public void handleResult(byte[] parsedData,int size) {
         String val = new String(parsedData);
         etReceiveContent.setText("");
         etReceiveContent.setText(val);

@@ -6,12 +6,13 @@ import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class ConnectedThread extends AsyncTask<Void, Void, Void> {
+public class ConnectedThread extends Thread {
 
-    private static final int BUFFER_SIZE = 1024;
+    private static final int BUFFER_SIZE = 64;
 
     private ResultHandler resultHandler;
     private BluetoothSocket bluetoothSocket;
@@ -19,13 +20,12 @@ public class ConnectedThread extends AsyncTask<Void, Void, Void> {
     private OutputStream outputStream;
     private Activity activity;
     private byte[] buffer;
-    private boolean repeat;
+    private int size;
 
     public ConnectedThread(ResultHandler resultHandler, Activity activity, BluetoothSocket bluetoothSocket) {
         this.resultHandler = resultHandler;
         this.activity = activity;
         this.bluetoothSocket = bluetoothSocket;
-        repeat = true;
         buffer = new byte[BUFFER_SIZE];
         try {
             inputStream = bluetoothSocket.getInputStream();
@@ -36,23 +36,23 @@ public class ConnectedThread extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
-        try {
-            do {
-                if (inputStream.read(buffer) == -1) {
-                    throw new Exception("Error reading data.");
+    public void run() {
+        while (true) {
+            try {
+                size = inputStream.read(buffer);
+                if (size > 0) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            resultHandler.handleResult(buffer,size);
+                        }
+                    });
+
                 }
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        resultHandler.handleResult(buffer, activity);
-                    }
-                });
-            } while (repeat);
-        } catch (Exception e) {
-            Log.e(ConnectedThread.class.getSimpleName(), e.toString(), e);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return null;
     }
 
     public void write(byte[] bytes) {
